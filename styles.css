@@ -1,0 +1,42 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+    background-color: #EEF0F4;
+}
+
+input {
+    color: #432000;
+    background-color: #DCE1EB;
+    border: none;
+    padding: 15px;
+    text-align: center;
+    border-radius: 7px;
+    font-size: 20px;
+    margin-bottom: 15px;
+    width: 200px;
+}
+
+button {
+    color: #FDFDFD;
+    background-color: #AC485A;
+    border: none;
+    padding: 15px;
+    width: 230px;
+    border-radius: 7px;
+    font-size: 20px;
+}
+
+.input-space {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+img{
+    display: block;
+    width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+}
