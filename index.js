@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://realtime-database-441c9-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -14,10 +14,24 @@ const inputEl = document.getElementById("input-field")
 const listEl = document.getElementById("groceries-list")
 
 addBtn.addEventListener("click", function(){
-    let inputValue = inputEl.value 
-    push(itemsInBD, inputValue)
-    addItem(inputValue)
-    clearInput()
+    if(inputEl.value!=""){ //added this so that user cannot add empty items
+        let inputValue = inputEl.value 
+        push(itemsInBD, inputValue)
+        clearInput()
+    }
+})
+
+onValue(itemsInBD, function(snapshot){ // is called anytime a value changes in the database
+    if(snapshot.exists()){
+        let itemsArray = Object.entries(snapshot.val())
+        clearList()
+        for (let i=0; i<itemsArray.length; i++){
+            let currentItem = itemsArray[i]
+            addItem(currentItem)
+        }
+    } else {
+        listEl.innerHTML="<p>No items here...yet</p>"
+    }
 })
 
 function clearInput(){
@@ -25,5 +39,20 @@ function clearInput(){
 }
 
 function addItem(value){
-    listEl.innerHTML += `<li>${value}</li>`
+    //listEl.innerHTML += `<li>${value}</li>` innerHTML is good for simple cases
+    let itemId = value[0]
+    let itemValue = value[1]
+    let newEl = document.createElement("li")
+    newEl.textContent = itemValue
+
+    newEl.addEventListener("click", function(){
+        let exactItemLocation = ref(database, `items/${itemId}`)
+        remove(exactItemLocation)
+    })
+
+    listEl.append(newEl)
+}
+
+function clearList(){
+    listEl.innerHTML = ""
 }
